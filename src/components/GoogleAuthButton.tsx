@@ -93,13 +93,14 @@ export default function GoogleAuthButton({
           client_id: clientId,
           scope: 'openid email profile',
           callback: (response) => {
-            if (response.error || !response.access_token) {
+            const accessToken = response.access_token;
+            if (response.error || !accessToken) {
               setBusy(false);
               return;
             }
             void (async () => {
               try {
-                await pending.current?.(response.access_token);
+                await pending.current?.(accessToken);
               } finally {
                 setBusy(false);
               }

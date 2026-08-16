@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { useT } from '@/context/LocaleContext';
+import PasswordInput from '@/components/PasswordInput';
 
 export default function RegisterPage() {
   const t = useT();
@@ -73,7 +74,6 @@ export default function RegisterPage() {
               [
                 ['name', 'auth.name', 'text'],
                 ['email', 'auth.email', 'email'],
-                ['password', 'auth.password', 'password'],
               ] as const
             ).map(([key, labelKey, type]) => (
               <label
@@ -90,6 +90,15 @@ export default function RegisterPage() {
                 />
               </label>
             ))}
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
+              {t('auth.password')}
+              <PasswordInput
+                value={form.password}
+                onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+                autoComplete="new-password"
+                required
+              />
+            </label>
             <button type="submit" className="btn-primary w-full" disabled={loading}>
               {loading ? t('auth.creating') : t('auth.create')}
             </button>

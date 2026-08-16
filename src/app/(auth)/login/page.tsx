@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { useT } from '@/context/LocaleContext';
+import PasswordInput from '@/components/PasswordInput';
 
 function LoginForm() {
   const t = useT();
@@ -83,11 +84,10 @@ function LoginForm() {
             </label>
             <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
               {t('auth.password')}
-              <input
-                type="password"
-                className="input-field mt-1.5"
+              <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 required
               />
             </label>

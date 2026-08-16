@@ -25,7 +25,10 @@ apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
     const message =
-      error.response?.data?.error || error.message || 'Đã xảy ra lỗi';
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      error.message ||
+      'Đã xảy ra lỗi';
     return Promise.reject(new Error(message));
   }
 );

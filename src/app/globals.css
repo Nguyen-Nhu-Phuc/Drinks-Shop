@@ -163,13 +163,20 @@ body {
   }
 
   /* Ticket-style coupon vouchers */
+  .coupon-banner {
+    --ticket-notch: rgb(var(--canvas-cream));
+  }
+
+  .dark .coupon-banner {
+    --ticket-notch: rgb(var(--canvas-night));
+  }
+
   .coupon-rail {
     @apply flex gap-4 overflow-x-auto pb-2 pt-1 snap-x snap-mandatory;
     scroll-padding-inline: 1.5rem;
   }
 
   .coupon-ticket {
-    --ticket-notch: rgb(var(--canvas-night));
     --ticket-ink: 12 12 11;
     --ticket-muted: 82 82 91;
     --ticket-soft: 113 113 122;

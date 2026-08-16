@@ -674,8 +674,10 @@ function CouponBannerSection({
   coupons: CouponPublic[];
 }) {
   const { locale } = useLocale();
+  const { theme } = useTheme();
   const t = useT();
   const toast = useToast();
+  const isDark = theme === 'dark';
   const [copied, setCopied] = useState<string | null>(null);
   const [termsCoupon, setTermsCoupon] = useState<CouponPublic | null>(null);
 
@@ -698,7 +700,13 @@ function CouponBannerSection({
   };
 
   return (
-    <section className="grain-dark relative overflow-hidden border-b border-hairline-dark bg-canvas-night text-on-night">
+    <section
+      className={`coupon-banner relative overflow-hidden border-b ${
+        isDark
+          ? 'grain-dark border-hairline-dark bg-canvas-night text-on-night'
+          : 'border-hairline-light bg-canvas-cream text-ink'
+      }`}
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-80"
@@ -711,19 +719,29 @@ function CouponBannerSection({
       <div className="page-shell relative section-pad">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-lg animate-fade-up">
-            <p className="eyebrow-on-dark">
+            <p className={isDark ? 'eyebrow-on-dark' : 'eyebrow'}>
               {str(config, 'eyebrow', t('home.coupons.eyebrow'), locale)}
             </p>
-            <h2 className="mt-3 font-display text-[clamp(2rem,5vw,3.25rem)] font-light leading-[1.02] tracking-[-0.02em] text-on-night">
+            <h2
+              className={`mt-3 font-display text-[clamp(2rem,5vw,3.25rem)] font-light leading-[1.02] tracking-[-0.02em] ${
+                isDark ? 'text-on-night' : 'text-ink'
+              }`}
+            >
               {str(config, 'heading', t('home.coupons.heading'), locale)}
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-link-cool-1">
+            <p
+              className={`mt-3 max-w-md text-sm leading-relaxed ${
+                isDark ? 'text-link-cool-1' : 'text-shade-60'
+              }`}
+            >
               {t('home.coupons.hint')}
             </p>
           </div>
           <Link
             href="/checkout"
-            className="btn-outline-dark animate-fade-up animate-delay-1 shrink-0 !min-h-11 !px-5 !py-2.5 text-sm"
+            className={`${
+              isDark ? 'btn-outline-dark' : 'btn-outline-light'
+            } animate-fade-up animate-delay-1 shrink-0 !min-h-11 !px-5 !py-2.5 text-sm`}
           >
             {t('home.coupons.checkout')}
           </Link>

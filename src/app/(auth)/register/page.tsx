@@ -34,7 +34,7 @@ export default function RegisterPage() {
     try {
       await register(form.name, form.email, form.password);
       toast.success(t('auth.registerOk'));
-      router.push('/account');
+      router.push('/');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('auth.registerFail'));
     } finally {
@@ -83,7 +83,7 @@ export default function RegisterPage() {
                       isNewUser ? t('auth.registerOk') : t('auth.loginOk')
                     );
                     if (isNewUser) toast.info(t('auth.googleWelcomeMail'));
-                    router.push('/account');
+                    router.push('/');
                   } catch (err) {
                     toast.error(
                       err instanceof Error ? err.message : t('auth.registerFail')

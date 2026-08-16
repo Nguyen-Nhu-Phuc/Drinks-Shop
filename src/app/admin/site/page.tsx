@@ -431,7 +431,25 @@ export default function AdminSitePage() {
 
   const load = useCallback(async () => {
     const { data } = await apiClient.get<SiteSettings>('/site/admin');
-    setSettings(data);
+    setSettings({
+      ...data,
+      aiWidget: {
+        enabled: data.aiWidget?.enabled !== false,
+        title: data.aiWidget?.title ?? { vi: 'Drinks AI', en: 'Drinks AI' },
+        subtitle:
+          data.aiWidget?.subtitle ?? {
+            vi: 'Gợi ý đồ uống',
+            en: 'Drink suggestions',
+          },
+        buttonLabel:
+          data.aiWidget?.buttonLabel ?? { vi: '✦ Ask AI', en: '✦ Ask AI' },
+        welcomeMessage:
+          data.aiWidget?.welcomeMessage ?? {
+            vi: 'Xin chào! Mình có thể gợi ý đồ uống...',
+            en: 'Hi! I can suggest drinks for you...',
+          },
+      },
+    });
     if (!selectedId && data.homeSections[0]) {
       setSelectedId(data.homeSections[0].id);
     }
@@ -583,7 +601,7 @@ export default function AdminSitePage() {
     { id: 'brand', label: 'Thương hiệu' },
     { id: 'nav', label: 'Menu' },
     { id: 'footer', label: 'Footer' },
-    { id: 'ai', label: 'AI Widget' },
+    { id: 'ai', label: 'Chatbot' },
   ];
 
   return (
@@ -1021,24 +1039,42 @@ export default function AdminSitePage() {
       )}
 
       {tab === 'ai' && (
-        <div className="mt-8 max-w-xl space-y-4 rounded-xl border border-hairline-light bg-canvas-light p-6">
+        <div className="mt-8 max-w-xl space-y-6">
+          <div className="rounded-xl border border-hairline-light bg-canvas-light p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="font-display text-heading-xl">Chatbot trên cửa hàng</p>
+                <p className="mt-1 max-w-sm text-sm leading-relaxed text-shade-50">
+                  {settings.aiWidget.enabled
+                    ? 'Nút chat đang hiện góc phải màn hình với khách (trừ trang admin).'
+                    : 'Nút chat đang ẩn trên toàn bộ cửa hàng.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() =>
+                  void persist({
+                    ...settings,
+                    aiWidget: {
+                      ...settings.aiWidget,
+                      enabled: !settings.aiWidget.enabled,
+                    },
+                  })
+                }
+                className={`rounded-pill px-4 py-2 text-sm font-medium ${
+                  settings.aiWidget.enabled
+                    ? 'bg-ink text-on-primary'
+                    : 'bg-shade-30 text-shade-60'
+                }`}
+              >
+                {settings.aiWidget.enabled ? 'Đang hiện' : 'Đang ẩn'}
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-4 rounded-xl border border-hairline-light bg-canvas-light p-6">
           <AdminLangTabs value={contentLang} onChange={setContentLang} />
-          <label className="flex items-center gap-3 text-sm">
-            <input
-              type="checkbox"
-              checked={settings.aiWidget.enabled}
-              onChange={(e) =>
-                setSettings({
-                  ...settings,
-                  aiWidget: {
-                    ...settings.aiWidget,
-                    enabled: e.target.checked,
-                  },
-                })
-              }
-            />
-            Hiện AI chat widget (nút chat góc phải storefront)
-          </label>
           <Field
             label="Tiêu đề"
             hint="Chữ lớn trên đầu hộp chat AI."
@@ -1121,8 +1157,9 @@ export default function AdminSitePage() {
             disabled={saving}
             onClick={() => void persist(settings)}
           >
-            Lưu AI widget
+            Lưu nội dung chatbot
           </button>
+          </div>
         </div>
       )}
     </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { apiClient } from '@/lib/apiClient';
 import { useSite } from '@/context/SiteContext';
 import { useLocale, useT } from '@/context/LocaleContext';
@@ -23,7 +24,8 @@ interface ChatProduct {
 export default function AIChatWidget() {
   const t = useT();
   const { locale } = useLocale();
-  const { site } = useSite();
+  const pathname = usePathname();
+  const { site, loading: siteLoading } = useSite();
   const widget = site?.aiWidget;
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -36,6 +38,7 @@ export default function AIChatWidget() {
   const title = pickLocale(widget?.title, locale, 'Drinks AI');
   const subtitle = pickLocale(widget?.subtitle, locale);
   const buttonLabel = pickLocale(widget?.buttonLabel, locale, '✦ Ask AI');
+  const hiddenOnAdmin = pathname?.startsWith('/admin') ?? false;
 
   useEffect(() => {
     if (welcomeMessage) {
@@ -50,7 +53,7 @@ export default function AIChatWidget() {
     el.scrollTop = el.scrollHeight;
   }, [messages, products, loading, open]);
 
-  if (!widget?.enabled) return null;
+  if (siteLoading || hiddenOnAdmin || widget?.enabled !== true) return null;
 
   const send = async () => {
     const text = input.trim();

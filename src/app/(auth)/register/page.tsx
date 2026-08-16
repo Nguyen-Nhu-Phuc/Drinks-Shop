@@ -8,10 +8,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { useT } from '@/context/LocaleContext';
 import PasswordInput from '@/components/PasswordInput';
+import GoogleAuthButton from '@/components/GoogleAuthButton';
 
 export default function RegisterPage() {
   const t = useT();
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const toast = useToast();
   const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -70,6 +71,34 @@ export default function RegisterPage() {
             </Link>
           </p>
           <form onSubmit={submit} className="mt-10 space-y-4">
+            <div className="flex justify-center">
+              <GoogleAuthButton
+                mode="register"
+                disabled={loading}
+                onAccessToken={async (accessToken) => {
+                  setLoading(true);
+                  try {
+                    const { isNewUser } = await loginWithGoogle(accessToken);
+                    toast.success(
+                      isNewUser ? t('auth.registerOk') : t('auth.loginOk')
+                    );
+                    if (isNewUser) toast.info(t('auth.googleWelcomeMail'));
+                    router.push('/account');
+                  } catch (err) {
+                    toast.error(
+                      err instanceof Error ? err.message : t('auth.registerFail')
+                    );
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              />
+            </div>
+            <p className="flex items-center gap-3 pt-1 text-[11px] uppercase tracking-[0.14em] text-shade-40">
+              <span className="h-px flex-1 bg-hairline-light" />
+              {t('auth.orEmail')}
+              <span className="h-px flex-1 bg-hairline-light" />
+            </p>
             {(
               [
                 ['name', 'auth.name', 'text'],

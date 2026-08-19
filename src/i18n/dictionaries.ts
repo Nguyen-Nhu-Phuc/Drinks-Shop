@@ -155,11 +155,71 @@ const vi: Dict = {
   'auth.passwordMin': 'Mật khẩu tối thiểu 6 ký tự',
   'auth.or': 'hoặc',
   'auth.orEmail': 'hoặc tiếp tục với email',
-  'auth.googleLogin': 'Đăng nhập bằng Google',
-  'auth.googleRegister': 'Đăng ký bằng Google',
-  'auth.googleLoading': 'Đang kết nối Google...',
+  'auth.googleLogin': 'Tiếp tục với Google',
+  'auth.googleRegister': 'Tiếp tục với Google',
+  'auth.googleLoading': 'Đang mở Google...',
   'auth.googleWelcomeMail': 'Đã gửi email chào mừng tới hộp thư Google của bạn',
   'auth.googleNotConfigured': 'Chưa cấu hình Google Client ID',
+  'auth.googleConsentTitle': 'Cho phép đăng nhập bằng Google',
+  'auth.googleConsentLead':
+    'Drinks dùng Google để xác minh bạn. Nếu đồng ý, Google sẽ chia sẻ với Drinks:',
+  'auth.googleConsentEmail': 'Địa chỉ email',
+  'auth.googleConsentProfile': 'Tên hiển thị và ảnh đại diện',
+  'auth.googleConsentNext':
+    'Bước tiếp theo, Google sẽ hỏi bạn chọn tài khoản và xác nhận quyền truy cập.',
+  'auth.googleConsentAgree':
+    'Tôi đồng ý chia sẻ thông tin trên với Drinks, và chấp nhận',
+  'auth.googleContinue': 'Tiếp tục tới Google',
+  'auth.googleNeedConsent': 'Vui lòng đồng ý chia sẻ thông tin trước khi tiếp tục',
+  'auth.forgotLink': 'Quên mật khẩu?',
+  'auth.forgotTitle': 'Quên mật khẩu',
+  'auth.forgotLead': 'Reset',
+  'auth.forgotLead2': 'gently',
+  'auth.forgotHint': 'Nhập email tài khoản. Nếu hợp lệ, chúng tôi gửi link đặt lại mật khẩu.',
+  'auth.forgotSubmit': 'Gửi link đặt lại',
+  'auth.forgotSending': 'Đang gửi...',
+  'auth.forgotOk': 'Nếu email tồn tại, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu.',
+  'auth.forgotBack': 'Quay lại đăng nhập',
+  'auth.resetTitle': 'Đặt lại mật khẩu',
+  'auth.resetLead': 'New',
+  'auth.resetLead2': 'password',
+  'auth.resetHint': 'Chọn mật khẩu mới cho tài khoản Drinks.',
+  'auth.resetSubmit': 'Lưu mật khẩu mới',
+  'auth.resetSaving': 'Đang lưu...',
+  'auth.resetOk': 'Đã đặt lại mật khẩu. Bạn có thể đăng nhập.',
+  'auth.resetInvalid': 'Link đặt lại mật khẩu hết hạn hoặc không hợp lệ',
+  'auth.resetMissing': 'Thiếu token đặt lại mật khẩu.',
+  'auth.legalNeed': 'Vui lòng đồng ý điều khoản và chính sách bảo mật',
+  'auth.legalAgree': 'Tôi đồng ý với',
+  'auth.and': 'và',
+
+  'legal.terms': 'Điều khoản',
+  'legal.privacy': 'Chính sách bảo mật',
+  'legal.updated': 'Cập nhật tháng 8 2026',
+  'legal.termsLead': 'Quy tắc dùng Drinks Shop.',
+  'legal.privacyLead': 'Cách Drinks xử lý dữ liệu của bạn.',
+  'legal.terms.p1':
+    'Drinks cung cấp dịch vụ đặt đồ uống trực tuyến. Khi tạo tài khoản hoặc đặt hàng, bạn xác nhận thông tin cung cấp là chính xác và bạn đủ tuổi sử dụng dịch vụ.',
+  'legal.terms.p2':
+    'Đơn hàng được xác nhận sau khi thanh toán Stripe thành công. Giá, phí ship và mã giảm giá hiển thị lúc checkout. Bạn có thể huỷ đơn khi đơn còn chờ thanh toán hoặc đã thanh toán nhưng chưa chuẩn bị.',
+  'legal.terms.p3':
+    'Tài khoản Google dùng luồng OAuth của Google. Bạn có thể yêu cầu xoá tài khoản bằng cách liên hệ email trên footer. Chúng tôi có thể khoá tài khoản nếu phát hiện gian lận.',
+  'legal.terms.p4':
+    'Chatbot AI chỉ tư vấn dựa trên danh mục sản phẩm. Câu trả lời không thay thế tư vấn y tế về caffeine, dị ứng hay rượu.',
+  'legal.privacy.p1':
+    'Chúng tôi thu thập họ tên, email, địa chỉ giao hàng, lịch sử đơn và (nếu đăng nhập Google) email, tên hiển thị, ảnh đại diện do Google chia sẻ sau khi bạn đồng ý.',
+  'legal.privacy.p2':
+    'Dữ liệu dùng để tạo tài khoản, giao hàng, thanh toán Stripe, gửi email đơn hàng / đặt lại mật khẩu, và cải thiện gợi ý chatbot. Chúng tôi không bán dữ liệu cá nhân.',
+  'legal.privacy.p3':
+    'Thanh toán thẻ được xử lý bởi Stripe; Drinks không lưu số thẻ. Cookie/localStorage lưu phiên đăng nhập, giỏ hàng, giao diện sáng/tối và ngôn ngữ.',
+  'legal.privacy.p4':
+    'Bạn có thể xem/sửa hồ sơ trong Tài khoản, đặt lại mật khẩu (tài khoản email), hoặc liên hệ để yêu cầu xoá dữ liệu trong phạm vi pháp luật cho phép.',
+
+  'notFound.eyebrow': '404',
+  'notFound.title': 'Trang này không còn ở đây',
+  'notFound.body': 'Link có thể đã đổi hoặc bạn gõ nhầm địa chỉ.',
+  'notFound.home': 'Về trang chủ',
+  'notFound.menu': 'Xem menu',
 
   'account.title': 'Tài khoản của tôi',
   'account.ordersLink': 'Lịch sử đơn hàng',
@@ -380,11 +440,71 @@ const en: Dict = {
   'auth.passwordMin': 'Password must be at least 6 characters',
   'auth.or': 'or',
   'auth.orEmail': 'or continue with email',
-  'auth.googleLogin': 'Sign in with Google',
-  'auth.googleRegister': 'Sign up with Google',
-  'auth.googleLoading': 'Connecting to Google...',
+  'auth.googleLogin': 'Continue with Google',
+  'auth.googleRegister': 'Continue with Google',
+  'auth.googleLoading': 'Opening Google...',
   'auth.googleWelcomeMail': 'A welcome email was sent to your Google inbox',
   'auth.googleNotConfigured': 'Google Client ID is not configured',
+  'auth.googleConsentTitle': 'Allow Google sign-in',
+  'auth.googleConsentLead':
+    'Drinks uses Google to verify your identity. If you agree, Google will share with Drinks:',
+  'auth.googleConsentEmail': 'Email address',
+  'auth.googleConsentProfile': 'Display name and profile photo',
+  'auth.googleConsentNext':
+    'Next, Google will ask you to choose an account and confirm access.',
+  'auth.googleConsentAgree':
+    'I agree to share this information with Drinks, and accept the',
+  'auth.googleContinue': 'Continue to Google',
+  'auth.googleNeedConsent': 'Please agree to share this information first',
+  'auth.forgotLink': 'Forgot password?',
+  'auth.forgotTitle': 'Forgot password',
+  'auth.forgotLead': 'Reset',
+  'auth.forgotLead2': 'gently',
+  'auth.forgotHint': 'Enter your account email. If it matches, we send a reset link.',
+  'auth.forgotSubmit': 'Send reset link',
+  'auth.forgotSending': 'Sending...',
+  'auth.forgotOk': 'If that email exists, we sent password reset instructions.',
+  'auth.forgotBack': 'Back to log in',
+  'auth.resetTitle': 'Reset password',
+  'auth.resetLead': 'New',
+  'auth.resetLead2': 'password',
+  'auth.resetHint': 'Choose a new password for your Drinks account.',
+  'auth.resetSubmit': 'Save new password',
+  'auth.resetSaving': 'Saving...',
+  'auth.resetOk': 'Password updated. You can log in now.',
+  'auth.resetInvalid': 'This reset link is expired or invalid',
+  'auth.resetMissing': 'Missing password reset token.',
+  'auth.legalNeed': 'Please accept the terms and privacy policy',
+  'auth.legalAgree': 'I agree to the',
+  'auth.and': 'and',
+
+  'legal.terms': 'Terms',
+  'legal.privacy': 'Privacy policy',
+  'legal.updated': 'Updated August 2026',
+  'legal.termsLead': 'The rules for using Drinks Shop.',
+  'legal.privacyLead': 'How Drinks handles your data.',
+  'legal.terms.p1':
+    'Drinks provides online drink ordering. By creating an account or placing an order, you confirm the information you provide is accurate and that you are old enough to use the service.',
+  'legal.terms.p2':
+    'Orders are confirmed after a successful Stripe payment. Prices, shipping, and coupons are shown at checkout. You may cancel while the order is awaiting payment or paid but not yet in preparation.',
+  'legal.terms.p3':
+    'Google accounts use Google’s OAuth flow. You can request account deletion via the email in the footer. We may lock accounts if we detect fraud.',
+  'legal.terms.p4':
+    'The AI chatbot only advises from our product catalog. Answers are not medical advice about caffeine, allergies, or alcohol.',
+  'legal.privacy.p1':
+    'We collect name, email, delivery address, order history, and (if you sign in with Google) the email, display name, and profile photo Google shares after you consent.',
+  'legal.privacy.p2':
+    'Data is used to create accounts, deliver orders, process Stripe payments, send order/reset emails, and improve chatbot suggestions. We do not sell personal data.',
+  'legal.privacy.p3':
+    'Card payments are handled by Stripe; Drinks does not store card numbers. Cookies/localStorage keep your session, cart, light/dark theme, and language.',
+  'legal.privacy.p4':
+    'You can view/edit your profile in Account, reset a password (email accounts), or contact us to request deletion where the law allows.',
+
+  'notFound.eyebrow': '404',
+  'notFound.title': 'This page isn’t here',
+  'notFound.body': 'The link may have moved, or the address was mistyped.',
+  'notFound.home': 'Back home',
+  'notFound.menu': 'Browse menu',
 
   'account.title': 'My account',
   'account.ordersLink': 'Order history',

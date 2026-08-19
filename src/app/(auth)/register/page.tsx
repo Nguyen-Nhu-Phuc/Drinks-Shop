@@ -9,6 +9,8 @@ import { useToast } from '@/context/ToastContext';
 import { useT } from '@/context/LocaleContext';
 import PasswordInput from '@/components/PasswordInput';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
+import AuthShell from '@/components/AuthShell';
+import LegalAgreeCopy from '@/components/LegalAgreeCopy';
 
 export default function RegisterPage() {
   const t = useT();
@@ -17,9 +19,14 @@ export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [legalOk, setLegalOk] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!legalOk) {
+      toast.error(t('auth.legalNeed'));
+      return;
+    }
     const schema = z.object({
       name: z.string().min(2, t('auth.nameMin')),
       email: z.string().email(t('auth.emailInvalid')),
@@ -43,97 +50,91 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="grid min-h-[80vh] lg:grid-cols-2">
-      <div className="hidden bg-canvas-night lg:flex lg:flex-col lg:justify-between lg:p-12">
-        <Link href="/" className="font-display text-2xl font-medium tracking-tight text-on-night">
-          Drinks
-        </Link>
-        <div>
-          <p className="font-display text-5xl font-light leading-tight tracking-tight text-on-night">
-            {t('auth.registerLead')}
-            <br />
-            {t('auth.registerLead2')}
-          </p>
-          <p className="mt-4 max-w-sm text-link-cool-1">
-            {t('auth.registerHint')}
-          </p>
-        </div>
-        <p className="text-xs text-link-cool-3">Fresh · Fast · Local</p>
-      </div>
-      <div className="flex items-center px-6 py-16 md:px-12">
-        <div className="mx-auto w-full max-w-md animate-fade-up">
-          <p className="eyebrow lg:hidden">Account</p>
-          <h1 className="section-title mt-2">{t('auth.registerTitle')}</h1>
-          <p className="mt-3 text-shade-50">
-            {t('auth.hasAccount')}{' '}
-            <Link href="/login" className="font-medium text-ink underline underline-offset-2">
-              {t('auth.loginLink')}
-            </Link>
-          </p>
-          <form onSubmit={submit} className="mt-10 space-y-4">
-            <div className="flex justify-center">
-              <GoogleAuthButton
-                mode="register"
-                disabled={loading}
-                onAccessToken={async (accessToken) => {
-                  setLoading(true);
-                  try {
-                    const { isNewUser } = await loginWithGoogle(accessToken);
-                    toast.success(
-                      isNewUser ? t('auth.registerOk') : t('auth.loginOk')
-                    );
-                    if (isNewUser) toast.info(t('auth.googleWelcomeMail'));
-                    router.push('/');
-                  } catch (err) {
-                    toast.error(
-                      err instanceof Error ? err.message : t('auth.registerFail')
-                    );
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-              />
-            </div>
-            <p className="flex items-center gap-3 pt-1 text-[11px] uppercase tracking-[0.14em] text-shade-40">
-              <span className="h-px flex-1 bg-hairline-light" />
-              {t('auth.orEmail')}
-              <span className="h-px flex-1 bg-hairline-light" />
-            </p>
-            {(
-              [
-                ['name', 'auth.name', 'text'],
-                ['email', 'auth.email', 'email'],
-              ] as const
-            ).map(([key, labelKey, type]) => (
-              <label
-                key={key}
-                className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50"
-              >
-                {t(labelKey)}
-                <input
-                  type={type}
-                  className="input-field mt-1.5"
-                  value={form[key]}
-                  onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                  required
-                />
-              </label>
-            ))}
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
-              {t('auth.password')}
-              <PasswordInput
-                value={form.password}
-                onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                autoComplete="new-password"
+    <AuthShell
+      lead={t('auth.registerLead')}
+      lead2={t('auth.registerLead2')}
+      hint={t('auth.registerHint')}
+      title={t('auth.registerTitle')}
+      subtitle={
+        <>
+          {t('auth.hasAccount')}{' '}
+          <Link href="/login" className="font-medium text-ink underline underline-offset-4">
+            {t('auth.loginLink')}
+          </Link>
+        </>
+      }
+    >
+      <div className="mt-8 space-y-5">
+        <GoogleAuthButton
+          mode="register"
+          disabled={loading}
+          onAccessToken={async (accessToken) => {
+            setLoading(true);
+            try {
+              const { isNewUser } = await loginWithGoogle(accessToken);
+              toast.success(isNewUser ? t('auth.registerOk') : t('auth.loginOk'));
+              if (isNewUser) toast.info(t('auth.googleWelcomeMail'));
+              router.push('/');
+            } catch (err) {
+              toast.error(
+                err instanceof Error ? err.message : t('auth.registerFail')
+              );
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+        <p className="flex items-center gap-3 text-[11px] uppercase tracking-[0.14em] text-shade-40">
+          <span className="h-px flex-1 bg-hairline-light" />
+          {t('auth.orEmail')}
+          <span className="h-px flex-1 bg-hairline-light" />
+        </p>
+        <form onSubmit={submit} className="space-y-4">
+          {(
+            [
+              ['name', 'auth.name', 'text', 'name'],
+              ['email', 'auth.email', 'email', 'email'],
+            ] as const
+          ).map(([key, labelKey, type, autoComplete]) => (
+            <label
+              key={key}
+              className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50"
+            >
+              {t(labelKey)}
+              <input
+                type={type}
+                autoComplete={autoComplete}
+                className="input-field mt-1.5"
+                value={form[key]}
+                onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
                 required
               />
             </label>
-            <button type="submit" className="btn-primary w-full" disabled={loading}>
-              {loading ? t('auth.creating') : t('auth.create')}
-            </button>
-          </form>
-        </div>
+          ))}
+          <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
+            {t('auth.password')}
+            <PasswordInput
+              value={form.password}
+              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+              autoComplete="new-password"
+              required
+            />
+          </label>
+          <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-snug text-ink">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4 shrink-0 accent-ink"
+              checked={legalOk}
+              disabled={loading}
+              onChange={(e) => setLegalOk(e.target.checked)}
+            />
+            <LegalAgreeCopy prefixKey="auth.legalAgree" />
+          </label>
+          <button type="submit" className="btn-primary w-full" disabled={loading || !legalOk}>
+            {loading ? t('auth.creating') : t('auth.create')}
+          </button>
+        </form>
       </div>
-    </div>
+    </AuthShell>
   );
 }

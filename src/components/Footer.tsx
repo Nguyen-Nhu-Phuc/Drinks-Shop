@@ -116,7 +116,21 @@ export default function Footer() {
         <span>
           © {new Date().getFullYear()} {brandName}
         </span>
-        <span>{pickLocale(site?.footerNote, locale)}</span>
+        <span className="flex flex-wrap gap-x-4 gap-y-1">
+          <Link
+            href="/terms"
+            className={`transition ${isDark ? 'hover:text-on-night' : 'hover:text-ink'}`}
+          >
+            {t('legal.terms')}
+          </Link>
+          <Link
+            href="/privacy"
+            className={`transition ${isDark ? 'hover:text-on-night' : 'hover:text-ink'}`}
+          >
+            {t('legal.privacy')}
+          </Link>
+          <span>{pickLocale(site?.footerNote, locale)}</span>
+        </span>
       </div>
     </footer>
   );

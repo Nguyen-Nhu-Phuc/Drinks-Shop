@@ -12,6 +12,15 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.output = {
+        ...config.output,
+        chunkLoadTimeout: 120000,
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {

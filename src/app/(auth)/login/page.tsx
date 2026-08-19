@@ -9,6 +9,7 @@ import { useToast } from '@/context/ToastContext';
 import { useT } from '@/context/LocaleContext';
 import PasswordInput from '@/components/PasswordInput';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
+import AuthShell from '@/components/AuthShell';
 
 function LoginForm() {
   const t = useT();
@@ -45,88 +46,78 @@ function LoginForm() {
   };
 
   return (
-    <div className="grid min-h-[80vh] lg:grid-cols-2">
-      <div className="hidden bg-canvas-night lg:flex lg:flex-col lg:justify-between lg:p-12">
-        <Link href="/" className="font-display text-2xl font-medium tracking-tight text-on-night">
-          Drinks
-        </Link>
-        <div>
-          <p className="font-display text-5xl font-light leading-tight tracking-tight text-on-night">
-            {t('auth.loginLead')}
-            <br />
-            {t('auth.loginLead2')}
-          </p>
-          <p className="mt-4 max-w-sm text-link-cool-1">
-            {t('auth.loginHint')}
-          </p>
-        </div>
-        <p className="text-xs text-link-cool-3">Fresh · Fast · Local</p>
-      </div>
-      <div className="flex items-center px-6 py-16 md:px-12">
-        <div className="mx-auto w-full max-w-md animate-fade-up">
-          <p className="eyebrow lg:hidden">Account</p>
-          <h1 className="section-title mt-2">{t('auth.loginTitle')}</h1>
-          <p className="mt-3 text-shade-50">
-            {t('auth.noAccount')}{' '}
-            <Link href="/register" className="font-medium text-ink underline underline-offset-2">
-              {t('auth.registerLink')}
+    <AuthShell
+      lead={t('auth.loginLead')}
+      lead2={t('auth.loginLead2')}
+      hint={t('auth.loginHint')}
+      title={t('auth.loginTitle')}
+      subtitle={
+        <>
+          {t('auth.noAccount')}{' '}
+          <Link href="/register" className="font-medium text-ink underline underline-offset-4">
+            {t('auth.registerLink')}
+          </Link>
+        </>
+      }
+    >
+      <div className="mt-8 space-y-5">
+        <GoogleAuthButton
+          mode="login"
+          disabled={loading}
+          onAccessToken={async (accessToken) => {
+            setLoading(true);
+            try {
+              const { isNewUser } = await loginWithGoogle(accessToken);
+              toast.success(isNewUser ? t('auth.registerOk') : t('auth.loginOk'));
+              if (isNewUser) toast.info(t('auth.googleWelcomeMail'));
+              router.push(redirect);
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : t('auth.loginFail'));
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+        <p className="flex items-center gap-3 text-[11px] uppercase tracking-[0.14em] text-shade-40">
+          <span className="h-px flex-1 bg-hairline-light" />
+          {t('auth.orEmail')}
+          <span className="h-px flex-1 bg-hairline-light" />
+        </p>
+        <form onSubmit={submit} className="space-y-4">
+          <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
+            {t('auth.email')}
+            <input
+              type="email"
+              className="input-field mt-1.5"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+            />
+          </label>
+          <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
+            {t('auth.password')}
+            <PasswordInput
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </label>
+          <p className="text-right text-[13px]">
+            <Link
+              href="/forgot-password"
+              className="font-medium text-ink underline underline-offset-4"
+            >
+              {t('auth.forgotLink')}
             </Link>
           </p>
-          <form onSubmit={submit} className="mt-10 space-y-4">
-            <div className="flex justify-center">
-              <GoogleAuthButton
-                mode="login"
-                disabled={loading}
-                onAccessToken={async (accessToken) => {
-                  setLoading(true);
-                  try {
-                    const { isNewUser } = await loginWithGoogle(accessToken);
-                    toast.success(
-                      isNewUser ? t('auth.registerOk') : t('auth.loginOk')
-                    );
-                    if (isNewUser) toast.info(t('auth.googleWelcomeMail'));
-                    router.push(redirect);
-                  } catch (err) {
-                    toast.error(
-                      err instanceof Error ? err.message : t('auth.loginFail')
-                    );
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-              />
-            </div>
-            <p className="flex items-center gap-3 pt-1 text-[11px] uppercase tracking-[0.14em] text-shade-40">
-              <span className="h-px flex-1 bg-hairline-light" />
-              {t('auth.orEmail')}
-              <span className="h-px flex-1 bg-hairline-light" />
-            </p>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
-              {t('auth.email')}
-              <input
-                type="email"
-                className="input-field mt-1.5"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </label>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-shade-50">
-              {t('auth.password')}
-              <PasswordInput
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-              />
-            </label>
-            <button type="submit" className="btn-primary w-full" disabled={loading}>
-              {loading ? t('auth.loggingIn') : t('auth.loginTitle')}
-            </button>
-          </form>
-        </div>
+          <button type="submit" className="btn-primary w-full" disabled={loading}>
+            {loading ? t('auth.loggingIn') : t('auth.loginTitle')}
+          </button>
+        </form>
       </div>
-    </div>
+    </AuthShell>
   );
 }
 

@@ -1,16 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Roboto } from 'next/font/google';
 import { useT } from '@/context/LocaleContext';
 import { useToast } from '@/context/ToastContext';
-import { useTheme } from '@/context/ThemeContext';
-
-const roboto = Roboto({
-  subsets: ['latin', 'latin-ext'],
-  weight: '500',
-  display: 'swap',
-});
+import LegalAgreeCopy from '@/components/LegalAgreeCopy';
 
 type TokenClient = {
   requestAccessToken: (opts?: { prompt?: string }) => void;
@@ -22,9 +15,9 @@ type Props = {
   onAccessToken: (accessToken: string) => Promise<void>;
 };
 
-function GoogleLogo() {
+function GoogleLogo({ className = 'h-5 w-5' }: { className?: string }) {
   return (
-    <svg className="gsi-icon" viewBox="0 0 48 48" aria-hidden>
+    <svg className={`shrink-0 ${className}`} viewBox="0 0 48 48" aria-hidden>
       <path
         fill="#EA4335"
         d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
@@ -41,7 +34,6 @@ function GoogleLogo() {
         fill="#34A853"
         d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
       />
-      <path fill="none" d="M0 0h48v48H0z" />
     </svg>
   );
 }
@@ -75,11 +67,12 @@ export default function GoogleAuthButton({
 }: Props) {
   const t = useT();
   const toast = useToast();
-  const { theme } = useTheme();
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
   const tokenClient = useRef<TokenClient | null>(null);
   const pending = useRef<((token: string) => Promise<void>) | null>(null);
   const [busy, setBusy] = useState(false);
+  const [step, setStep] = useState<'idle' | 'consent'>('idle');
+  const [shareData, setShareData] = useState(false);
 
   pending.current = onAccessToken;
 
@@ -92,6 +85,7 @@ export default function GoogleAuthButton({
         tokenClient.current = window.google.accounts.oauth2.initTokenClient({
           client_id: clientId,
           scope: 'openid email profile',
+          enable_granular_consent: true,
           callback: (response) => {
             const accessToken = response.access_token;
             if (response.error || !accessToken) {
@@ -106,6 +100,9 @@ export default function GoogleAuthButton({
               }
             })();
           },
+          error_callback: () => {
+            setBusy(false);
+          },
         });
       })
       .catch(() => {
@@ -116,38 +113,113 @@ export default function GoogleAuthButton({
     };
   }, [clientId]);
 
-  const click = useCallback(() => {
+  const openConsent = useCallback(() => {
     if (busy || disabled) return;
     if (!clientId || !tokenClient.current) {
       toast.error(t('auth.googleNotConfigured'));
       return;
     }
-    setBusy(true);
-    tokenClient.current.requestAccessToken({ prompt: '' });
+    setShareData(false);
+    setStep('consent');
   }, [busy, clientId, disabled, t, toast]);
 
-  const label = busy
-    ? t('auth.googleLoading')
-    : mode === 'register'
-      ? t('auth.googleRegister')
-      : t('auth.googleLogin');
+  const cancelConsent = useCallback(() => {
+    if (busy) return;
+    setStep('idle');
+    setShareData(false);
+  }, [busy]);
+
+  const continueToGoogle = useCallback(() => {
+    if (busy || disabled) return;
+    if (!shareData) {
+      toast.error(t('auth.googleNeedConsent'));
+      return;
+    }
+    if (!tokenClient.current) {
+      toast.error(t('auth.googleNotConfigured'));
+      return;
+    }
+    setBusy(true);
+    tokenClient.current.requestAccessToken({ prompt: 'select_account consent' });
+  }, [busy, disabled, shareData, t, toast]);
+
+  const ctaLabel =
+    mode === 'register' ? t('auth.googleRegister') : t('auth.googleLogin');
+
+  if (step === 'consent') {
+    return (
+      <div className="rounded-2xl border border-hairline-light bg-canvas-light p-5">
+        <div className="flex items-center gap-3">
+          <GoogleLogo className="h-6 w-6" />
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-shade-40">
+              Google
+            </p>
+            <h2 className="text-[17px] font-medium tracking-tight text-ink">
+              {t('auth.googleConsentTitle')}
+            </h2>
+          </div>
+        </div>
+        <p className="mt-4 text-[14px] leading-relaxed text-shade-60">
+          {t('auth.googleConsentLead')}
+        </p>
+        <ul className="mt-3 space-y-2 text-[14px] text-ink">
+          <li className="flex gap-2">
+            <span className="text-shade-40">·</span>
+            {t('auth.googleConsentEmail')}
+          </li>
+          <li className="flex gap-2">
+            <span className="text-shade-40">·</span>
+            {t('auth.googleConsentProfile')}
+          </li>
+        </ul>
+        <p className="mt-3 text-[13px] leading-relaxed text-shade-50">
+          {t('auth.googleConsentNext')}
+        </p>
+        <label className="mt-4 flex cursor-pointer items-start gap-3 text-[14px] leading-snug text-ink">
+          <input
+            type="checkbox"
+            className="mt-0.5 h-4 w-4 shrink-0 accent-ink"
+            checked={shareData}
+            disabled={busy}
+            onChange={(e) => setShareData(e.target.checked)}
+          />
+          <span>
+            <LegalAgreeCopy prefixKey="auth.googleConsentAgree" />
+          </span>
+        </label>
+        <div className="mt-5 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            className="btn-outline-light"
+            onClick={cancelConsent}
+            disabled={busy}
+          >
+            {t('common.cancel')}
+          </button>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={continueToGoogle}
+            disabled={busy || !shareData}
+          >
+            {busy ? t('auth.googleLoading') : t('auth.googleContinue')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <button
       type="button"
-      onClick={click}
+      onClick={openConsent}
       disabled={disabled || busy}
-      className={`gsi-material-button ${theme === 'dark' ? 'gsi-material-button-dark' : ''} ${roboto.className}`}
-      aria-label={label}
+      className="btn-google"
+      aria-label={ctaLabel}
     >
-      <div className="gsi-material-button-state" />
-      <div className="gsi-material-button-content-wrapper">
-        <div className="gsi-material-button-icon">
-          <GoogleLogo />
-        </div>
-        <span className="gsi-material-button-contents">{label}</span>
-        <span className="gsi-material-button-contents-hidden">{label}</span>
-      </div>
+      <GoogleLogo />
+      <span>{ctaLabel}</span>
     </button>
   );
 }
@@ -160,10 +232,12 @@ declare global {
           initTokenClient: (config: {
             client_id: string;
             scope: string;
+            enable_granular_consent?: boolean;
             callback: (response: {
               access_token?: string;
               error?: string;
             }) => void;
+            error_callback?: (error: { type: string; message?: string }) => void;
           }) => TokenClient;
         };
       };

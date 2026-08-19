@@ -100,6 +100,12 @@ body {
     min-height: 48px;
   }
 
+  .btn-google {
+    @apply inline-flex w-full items-center justify-center gap-3 rounded-pill border border-hairline-light bg-canvas-light px-7 text-[15px] text-ink shadow-sm transition-all duration-300 hover:border-ink/25 hover:bg-canvas-cream hover:shadow-md hover:scale-[1.01] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 disabled:hover:scale-100;
+    font-weight: 500;
+    min-height: 48px;
+  }
+
   .input-field {
     @apply w-full rounded-md border border-hairline-light bg-canvas-light px-3.5 py-2.5 text-[15px] text-ink outline-none transition-all duration-200 placeholder:text-shade-40 focus:border-ink focus:ring-1 focus:ring-ink/10;
     font-weight: 400;
@@ -407,127 +413,6 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* Google Identity branding — https://developers.google.com/identity/branding-guidelines */
-.gsi-material-button {
-  -moz-user-select: none;
-  user-select: none;
-  appearance: none;
-  background-color: #fff;
-  background-image: none;
-  border: 1px solid #747775;
-  border-radius: 4px;
-  box-sizing: border-box;
-  color: #1f1f1f;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  height: 40px;
-  letter-spacing: 0.25px;
-  outline: none;
-  overflow: hidden;
-  padding: 0 12px;
-  position: relative;
-  text-align: center;
-  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
-  vertical-align: middle;
-  white-space: nowrap;
-  width: 100%;
-  max-width: 400px;
-}
-
-.gsi-material-button .gsi-material-button-icon {
-  height: 20px;
-  margin-right: 10px;
-  min-width: 20px;
-  width: 20px;
-}
-
-.gsi-material-button .gsi-icon {
-  display: block;
-  height: 20px;
-  width: 20px;
-}
-
-.gsi-material-button .gsi-material-button-content-wrapper {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  height: 100%;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-}
-
-.gsi-material-button .gsi-material-button-contents {
-  flex-grow: 1;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: top;
-}
-
-.gsi-material-button .gsi-material-button-contents-hidden {
-  display: none;
-}
-
-.gsi-material-button .gsi-material-button-state {
-  bottom: 0;
-  left: 0;
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: opacity 0.218s;
-  background-color: #303030;
-}
-
-.gsi-material-button:hover {
-  box-shadow:
-    0 1px 2px 0 rgba(60, 64, 67, 0.3),
-    0 1px 3px 1px rgba(60, 64, 67, 0.15);
-}
-
-.gsi-material-button:hover .gsi-material-button-state {
-  opacity: 0.08;
-}
-
-.gsi-material-button:focus .gsi-material-button-state {
-  opacity: 0.12;
-}
-
-.gsi-material-button:active .gsi-material-button-state {
-  opacity: 0.12;
-}
-
-.gsi-material-button:disabled {
-  cursor: default;
-  background-color: #ffffff61;
-  border-color: #1f1f1f1f;
-}
-
-.gsi-material-button:disabled .gsi-material-button-contents {
-  opacity: 0.38;
-}
-
-.gsi-material-button:disabled .gsi-material-button-icon {
-  opacity: 0.38;
-}
-
-.gsi-material-button-dark {
-  background-color: #131314;
-  border-color: #8e918f;
-  color: #e3e3e3;
-}
-
-.gsi-material-button-dark:hover {
-  box-shadow: 0 1px 3px 1px rgba(48, 48, 48, 0.3), 0 1px 2px 0 rgba(48, 48, 48, 0.15);
-}
-
-.gsi-material-button-dark .gsi-material-button-state {
-  background-color: #fff;
 }
 
 @media (prefers-reduced-motion: reduce) {
